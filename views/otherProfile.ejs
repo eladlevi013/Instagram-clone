@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<style>
+    .profile_img {
+        width: 12%;
+    }
+
+    .img {
+        object-fit: cover;     
+    }
+
+    img {
+        width: 250px;
+        height: 250px;
+    }
+
+    @media only screen and (max-width: 900px) {
+        .profile_img {
+            width: 30%;
+        }
+
+        img {
+        width: 100px;
+        height: 100px;
+    }
+    }
+</style>
+
+<body style="background:#FAFAFA;">
+<%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+    <br>
+    <div class="center" style="margin-top: 30px;">
+        <div>
+            <img src="<%= OtherAccountContent.avatar %>" alt="" style="box-shadow: 0 0 40px 1px rgba(0, 0, 0, 0.2);"
+                class="circle responsive-img profile_img" /><br><br>
+            <a href="" style="font-size: 16px; margin-top: 10px;">Full name: <%= OtherAccountContent.firstName %> <%= OtherAccountContent.lastName %><br>Username: <%= OtherAccountContent.username %></a>
+        </div>
+    </div>
+
+    <table align="center" style="width: 10%; margin-top: 75px;"><tr>
+    <% id = 1; %>
+            <% for(let post of posts) { %>
+                <th>
+                    <a href="/view/<%= post._id %>">
+                        <img style=" background-size: cover;" class="img" src="<%=post.imageSource%>" >
+                    </a>
+                </th>
+                <% if(id%3 == 0) { %> </tr><tr> <% } %>
+                <% id += 1 %>
+            <% } %>
+    </tr></table>
+<%- include('./includes/footer.ejs') %>
+</body>
+</html>

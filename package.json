@@ -1,0 +1,29 @@
+{
+  "name": "instaapp",
+  "version": "1.0.0",
+  "description": "This is my Instagram version",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Elihu",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "cloudinary": "^1.30.0",
+    "connect-mongodb-session": "^3.1.1",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "moment": "^2.29.3",
+    "mongoose": "^6.4.0",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.2.6",
+    "nodemon": "^2.0.18"
+  }
+}

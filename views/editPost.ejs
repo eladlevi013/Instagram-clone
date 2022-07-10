@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+  <h4>Edit Post</h4>
+    <br/>
+    <form id="upload_form" method="POST" action="/view/editImage/<%=post._id%>" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col s12" style="text-align: center; padding: 0px 0px;">
+          <img src="<%=post.imageSource%>" style="width: 40%; margin-top: 12px;"/>
+        </div>
+      </div>
+
+<div class="input-field col s12">
+    <label for="title" class="form-label">Title</label>
+    <input value="<%= post.title%>" type="text" id="title" name="title">
+</div>
+
+<div class="input-field col s12">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="materialize-textarea" id="description" name="description"><%= post.description%></textarea>
+</div>
+
+<div class="file-field input-field col s12">
+    <div class="btn">
+      <span>File</span>
+      <input type="file" name="image" id="image" multiple>
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path" type="text" placeholder="Upload one or more files">
+    </div>
+  </div>
+    <br/>
+    <button type="submit" form="upload_form" class="waves-effect waves-light btn-large light-green">Update Image</button>
+
+    </form>
+    <%- include('./includes/footer.ejs') %>
+</body>
+</html>

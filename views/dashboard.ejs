@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css” />
+    <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css”/>
+</head>
+
+<style>
+    .size {
+        width: 470px;
+    }
+
+    .modal  {
+        -webkit-border-radius: 0px !important;
+        -moz-border-radius: 0px !important;
+        border-radius: 5px !important; 
+        width: 40% !important;
+    }
+
+    @media only screen and (max-width: 900px) {
+        .modal  {
+            -webkit-border-radius: 0px !important;
+            -moz-border-radius: 0px !important;
+            border-radius: 5px !important; 
+            width: 90% !important;
+        }
+
+        .size {
+            width: 95%;
+        }
+    }
+
+</style>
+<body style="background:#FAFAFA">
+    <%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <% if(allposts.length> 0) { %>
+                    <% for(let item of allposts){ %>
+                        <div class="card size shadow-none" style="margin: 0 auto; float: none; margin-top: 20px; border-radius: 7px; border-color: lightgray; border-width: 1.8px; border-style: solid; outline: none; box-shadow: none;" class="container">
+                            <div style="margin-top: 17px; margin-left: 16px;" class="container">
+                                <div class="row">
+                                    <img style="vertical-align:middle; width:35px;" src="<%= item.associateId.avatar %>" alt="" class="circle responsive-img" style="width:35px;">
+                                    <span style="margin-left: 5px;"><a href="/user/<%= item.associateId.username %>" style="font-size: 16px;"><%= item.associateId.username %></a></span>
+                                    <!-- <div><img src="<%= item.associateId.avatar %>" alt="" class="circle responsive-img" style="width:35px;"/></div> -->
+                                    <!-- <div><a href="" style="font-size: 16px;"><%= item.associateId.firstName %> <%= item.associateId.lastName %></a></div> -->
+                                    <!-- <p style="font-size: 11px; font-style: italic; color:#FFFFFF"><%= moment(item.createdAt).format('DD/MM/YYYY h:mm:ss') %></p> -->
+                                </div>
+                            </div>
+                            <div class="card-image waves-effect waves-block waves-light shadow-none">
+                                <a href="/view/<%= item._id %>">
+                                    <img class="activator" src="<%= item.imageSource %>">
+                                </a>
+                                <!-- <a data-target="modal_<%=item._id%>" class="modal-trigger">
+                                    <img class="activator" src="<%= item.imageSource %>"> -->
+                                </a>
+                            </div>
+                            <div style="margin: 10px;">
+                                <div>
+                                    <!-- <a href="view/like/<%= item._id %>"> -->
+                                    <%if(item.likes.filter((x) => x.userId.equals(accountId)).length > 0 ? true : false){%>
+                                        <span onclick="like_function('<%= item._id %>')">
+                                            <i id="like_button_<%= item._id %>" class="material-icons" style="color: red;">favorite</i>
+                                            <div id="like_count_<%= item._id %>" style="display: inline; margin-left: -5px;"><%= item.likes.length %> ‎ ‎</div>
+                                        </span>
+                                    <%}else{%>
+                                        <span onclick="like_function('<%= item._id %>')">
+                                            <i id="like_button_<%= item._id %>" class="material-icons">favorite_border</i>
+                                            <div id="like_count_<%= item._id %>" style="display: inline; margin-left: -5px;"><%= item.likes.length %> ‎ ‎</div>
+                                        </span>
+                                    <%}%>
+                                    <i class="material-icons">chat_bubble_outline</i><%= item.comments.length %>
+                                    <!-- </a> -->
+                                </div>
+                                 <br>
+                                 
+                                <span class="activator grey-text text-darken-4">
+                                    <strong style="font-size: 15px;"><%= item.title %></strong>
+                                    <br>
+                                    <%= item.description %>
+                                    <br>
+                                    <a data-target="modal_<%=item._id%>" class="modal-trigger"><span style="color: #939393;">View all <%= item.comments.length %> comments</span></a>
+                                </span>
+                            </div>
+                        </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+});
+</script>
+
+<!-- Modal Structure -->
+<div style="overflow: hidden">
+<div id="modal_<%=item._id%>" class="modal modal-open" style="width: 30%; ">
+  <div class="modal-content" style="margin-left: 20px;">
+    <h5 class="modal-title">Comments:</h5>
+    <div class="row">
+        <div class="col s12" style= "padding:5px 0;">
+            <% if(item.comments.length > 0){ %>
+                <%for(let comment of item.comments){%>
+                    <div class="row">
+                        <div class="col s12">
+                            <a href="#" style="line-height: 0px;">
+                                <%if(comment.userId.equals(accountId)){%>
+                                    You <a onclick="return confirm('Are you sure you want to delete this item?');" style="font-style: italic; font-size: 12px;" href="/view/remove_comment/<%=item._id%>/<%=comment._id%>">Remove</a>
+                                <%} else {%>
+                                    <%= comment.user%>
+                                <% } %>
+                            </a>
+                            <p style="font-size: 11px; line-height: 0px; font-style: italic; color:#ccc"><%= moment(comment.createdAt).format('DD/MM/YYYY h:mm:ss') %></p>
+                            <p><%= comment.comment %></p>
+                        </div>
+                    </div>
+                    <hr>
+                <%}%>
+            <% } %>
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+                        <% } %>
+
+                            <% } else { %>
+                                <p>No data was found</p>
+                                <% } %>
+            </div>
+        </div>
+    </div>
+    <%- include('./includes/footer.ejs') %>
+</body>
+<script>
+    function like_function(post_id) {
+        // alert(post_id);
+        var like_button = document.getElementById(`like_button_${post_id}`);
+        var like_count = document.getElementById(`like_count_${post_id}`);
+
+        console.log(`${window.location.origin}/view/like/${post_id}`);
+        $.ajax({
+            url : `${window.location.origin}/view/like/${post_id}` ,
+            type : 'GET',
+            data : {},
+            dataType:'json',    
+            success : function(data) {
+                // alert('Data: ' + data);
+                console.log(data.LikesCount);
+                if(data.isLiked == true)
+                {
+                    // console.log("favorite");
+                    like_button.textContent  = 'favorite';
+                    like_button.style.color = 'red';
+                    like_count.textContent = `${data.LikesCount} ‎ ‎ `;
+                }
+                else
+                {
+                    // console.log("favorite_border");
+                    like_button.textContent  = 'favorite_border';
+                    like_button.style.color = 'black';
+                    like_count.textContent = `${data.LikesCount-1} ‎ ‎ `;
+                }
+            },
+            error : function(request,error)
+            {
+                alert("Request: " + JSON.stringify(request));
+            }
+        });
+    }
+</script>
+</html>

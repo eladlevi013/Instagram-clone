@@ -1,0 +1,131 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arima:wght@400;700&family=Roboto+Slab:wght@500&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+<link href="http://fonts.cdnfonts.com/css/billabong" rel="stylesheet">
+
+<style>
+@font-face {
+    font-family: 'Billabong';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Billabong'), url('https://fonts.cdnfonts.com/s/13949/Billabong.woff') format('woff');
+}
+
+.navbar-center
+    {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .no-shadows {
+        border-bottom: #DBDBDB;
+        /* border-width: 2px; */
+        /* border-style: solid; */
+    }
+
+    .notification-icon--fixed {
+        position: relative;
+        color: #fff;
+        background-color: red;
+        border-radius: 50%;
+        font-family: "Roboto";
+        /* Alignment */
+        line-height: 0;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        /* Adjust as required: */
+        padding: 5px;
+        font-size: 10px;
+    }
+
+    .notification-icon--fixed:hover {
+        position: relative;
+        color: #fff;
+        background-color: red;
+        border-radius: 50%;
+        font-family: "Roboto";
+        /* Alignment */
+        line-height: 0;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        /* Adjust as required: */
+        padding: 5px;
+        font-size: 10px;
+    }
+
+/* Height = width */
+.notification-icon--fixed::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.img {
+        object-fit: cover;     
+    }
+</style>
+
+<nav class="no-shadows" style="height: 60px; background-color: #FFFFFF;">
+    <div class="container-fluid-nav text-justify">
+        <a href="/dashboard" class="brand-logo navbar-center" style="font-family: 'Billabong'; color: #322E2F; font-size: 40px; font-weight: 500;"><div>Instragram</div></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons" style="color: black;">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <!-- <li><a href="/dashboard">Posts</a></li> -->
+            <li><a href="/dashboard" style="color: #322E2F" class="material-icons">home</a></li>
+            <!-- <li><a href="/addPost">Create New Post</a></li> -->
+            <li><a href="/addPost" style="color: #322E2F" class="material-icons">file_upload</a></li>
+            <!-- <li><a href="/profile">My Profile</a></li> -->
+            <li>
+                <a style="color: #322E2F" class="material-icons dropdown-trigger" href='#' data-target='dropdown1'>notifications</a>
+            </li>
+            <li>
+                <!-- <a href="/profile" style="color: #322E2F" class="material-icons">account_circle</a> -->
+                <a href="/profile" style="display: contents;"><img src="<%=accountContent.avatar%>" style="margin-top: 12px; width: 30px; margin-left: 15px;" class="circle responsive-img profile_img"/></a>
+                <a class="notification-icon--fixed" style="left: -78px; bottom: 22px;">
+                    <small class="notification-badge" style="font-size: 10px;"><%= accountContent.notifications.filter(function(notification) {return !notification.seen && notification.referecedPostId != null;}).length; %></small>
+                </a>
+            </li>
+            <!-- <li><a href="/dashboard/logout">Logout</a></li> -->
+            <!-- <li><a href="/logout" style="color: #322E2F" class="material-icons">exit_to_app</a></li> -->
+        </ul>
+    </div>
+</nav>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <% for(let notification of accountContent.notifications.slice().reverse()){ %>
+        <% if(notification.seen == false) { %>
+            <% if(notification.referecedPostId != null) { %>
+                <div>
+                    <li style="background-color: #FFFFFF; width: 480px; display: flex; padding: 5px;">
+                        <img class="circle img" style="margin-left: 5px; margin-top: 10px; background-size: cover; width: 30px; height: 30px;" src="<%=notification.referecedPostId.imageSource%>">
+                        <a style="color: #322E2F;" href='http://<%= baseUrl %>/view/<%= notification.referecedPostId._id %>'><%= notification.message %></a>
+                        <div style="flex: 1;"><a href='http://<%= baseUrl %>/view/notificationSeen/<%=notification._id%>' class="material-icons" style="float: right; margin-right: 5px; margin-top: 12px; color:black;">close</a>
+                    </li>
+                    
+                    <li class="divider" tabindex="-1"></li>
+                </div>
+            <% } %>
+        <% } %>
+    <% } %>
+  </ul>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var instances = M.Dropdown.init(elems, {constrainWidth: false});
+  });
+        
+</script>
+
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="/dashboard">Posts</a></li>
+    <li><a href="/addPost">Create New Post</a></li>
+    <li><a href="/profile">My Profile</a></li>
+    <li><a href="/dashboard/logout">Logout</a></li>
+</ul>

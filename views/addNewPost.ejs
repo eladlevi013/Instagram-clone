@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+  <h4>Create New Post</h4>
+    <br/>
+    <form id="upload_form" method="POST" action="/addPost/create" enctype="multipart/form-data">
+<div class="input-field col s12">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" id="title" name="title">
+</div>
+<div class="input-field col s12">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="materialize-textarea" id="description" name="description"></textarea>
+</div>
+<div class="file-field input-field col s12">
+    <div class="btn">
+      <span>File</span>
+      <input type="file" name="image" id="image" multiple>
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path" type="text" placeholder="Upload one or more files">
+    </div>
+  </div>
+    <br/>
+    <button type="submit" form="upload_form" class="waves-effect waves-light btn-large light-green">Upload</button>
+    </form>
+    <%- include('./includes/footer.ejs') %>
+</body>
+</html>

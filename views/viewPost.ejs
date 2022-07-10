@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Post</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<style>
+    .post_size {
+        width: 30%;
+    }
+
+    @media only screen and (max-width: 900px) {
+        .post_size {
+            width: 90%;
+        }
+    }
+</style>
+
+<body style="background:#f09433; 
+background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 ); background-attachment: fixed;">
+<%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+<div style="padding-top: 20px; padding: 20px; background:rgba(255,255,255, 0.2); margin-top: 25px; margin-bottom: 25px; border-radius: 5px;" class="container post_size">
+        <div class="row">
+            <div class="col s2">
+                <img src="<%= post.associateId.avatar %>" alt=""
+                    class="circle responsive-img" />
+            </div>
+            <div class="col s10">
+                <a href="" style="font-size: 16px; line-height: 0px;"><%= post.associateId.firstName %> <%= post.associateId.lastName %></a>
+                <p style="font-size: 11px; line-height: 0px; font-style: italic; color:#ccc"><%= moment(post.createdAt).format('DD/MM/YYYY h:mm:ss') %></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <img class="materialboxed" style="width: 100%;" src="<%= post.imageSource %>">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <h5 style=""><%= post.title %></h5>
+                <p style=""><%= post.description %></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12" style="padding:10px 0; border-bottom:1px #ccc solid; border-top: 1px #ccc solid">
+                <i class="material-icons">chat_bubble_outline</i> <%= post.comments.length %>
+
+                <span onclick="like_function('<%= post._id %>')">
+                <%if(isUserLiked){%>
+                    <i id="like_button_<%= post._id %>" class="material-icons" style="color: red;">favorite</i>
+                    <div id="like_count_<%= post._id %>" style="display: inline; margin-left: -5px;"><%= post.likes.length %> ‎ ‎</div>
+                <%}else{%>
+                    <i class="material-icons">favorite_border</i> <%= post.likes.length %>
+                <%}%>
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12" style="padding:5px 0;">
+                <p>Comments</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12" style="padding:5px 0;">
+                <% if(post.comments.length > 0){ %>
+                    <%for(let comment of post.comments){%>
+                        <div class="row">
+                            <div class="col s12">
+                                <a href="#" style="">
+                                    <%if(comment.userId.equals(accountId)){%>
+                                        You <a onclick="return confirm('Are you sure you want to delete this item?');" style="font-style: italic; font-size: 12px;" href="/view/remove_comment/<%=post._id%>/<%=comment._id%>">Remove</a>
+                                    <%} else {%>
+                                        <%= comment.user%>
+                                    <% } %>
+                                </a>
+                                <p style="font-size: 11px; line-height: 0px; font-style: italic; color:#ccc"><%= moment(comment.createdAt).format('DD/MM/YYYY h:mm:ss') %></p>
+                                <p><%= comment.comment %></p>
+                            </div>
+                        </div>
+                    <%}%>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12" style="padding:10px 0; border-bottom:1px #ccc solid; border-top: 1px #ccc solid">
+                
+                <form method="post" action="/view/addcomment/<%= post._id %>">
+                    <div class="row">
+                        <div class="input-field col s10">
+                            <label for="comment" class="form-label">Comment</label>
+                            <input type="text" id="comment" name="comment">
+                        </div>
+                        <div class="col s2">
+                            <button type="submit" class="waves-effect waves-light btn-large light-green"><i class="material-icons">send</i></button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    
+    <%- include('./includes/footer.ejs') %>
+</body>
+<script>
+    function like_function(post_id) {
+        // alert(post_id);
+        var like_button = document.getElementById(`like_button_${post_id}`);
+        var like_count = document.getElementById(`like_count_${post_id}`);
+
+        console.log(`${window.location.origin}/view/like/${post_id}`);
+        $.ajax({
+            url : `${window.location.origin}/view/like/${post_id}` ,
+            type : 'GET',
+            data : {},
+            dataType:'json',    
+            success : function(data) {
+                // alert('Data: ' + data);
+                console.log(data.LikesCount);
+                if(data.isLiked == true)
+                {
+                    // console.log("favorite");
+                    like_button.textContent  = 'favorite';
+                    like_button.style.color = 'red';
+                    like_count.textContent = `${data.LikesCount} ‎ ‎ `;
+                }
+                else
+                {
+                    // console.log("favorite_border");
+                    like_button.textContent  = 'favorite_border';
+                    like_button.style.color = 'black';
+                    like_count.textContent = `${data.LikesCount-1} ‎ ‎ `;
+                }
+            },
+            error : function(request,error)
+            {
+                alert("Request: " + JSON.stringify(request));
+            }
+        });
+    }
+</script>
+</html>

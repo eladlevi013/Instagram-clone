@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<style>
+    .profile_img {
+        width: 10%;
+    }
+
+    @media only screen and (max-width: 900px) {
+        .profile_img {
+            width: 50%;
+        }
+    }
+</style>
+
+<body style="background:#f09433; 
+background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 ); background-attachment: fixed;">
+
+<%- include('./includes/nav.ejs', {accountId: accountId, accountContent: accountContent}) %>
+        <br>
+    <div class="container" style="background:rgba(255,255,255, 0.2); padding: 10px;">
+        <a href="dashboard/logout"><div class="btn" style="background-color: red;">Logout</div></a>
+        <div style="width: 80%;" class="container">
+            <div class="row">
+                <div class="col s12" style="text-align: center; padding: 0px 0px;">
+                    <img src="<%=myData.avatar%>" style="margin-top: 12px;" class="circle responsive-img profile_img" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12" style="text-align: center; padding:0px;">
+                    <h5 style="padding: 0px; line-height: 0px;">
+                        <%=myData.firstName%>
+                            <%=myData.lastName%>
+                    </h5>
+                    <p>
+                        <%=myData.email%>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col s12" style="text-align: center; padding: 0px 0px;">
+                    <form id="signup_form" method="post" action="/profile/update_mydata" enctype="multipart/form-data">
+
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" value="<%= myData.firstName%>" class="form-control" id="firstName" name="firstName">
+
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" value="<%= myData.lastName%>" class="form-control" id="lastName" name="lastName">
+
+                        
+
+                        <div class="file-field input-field col s12">
+                            <div class="btn">
+                                <span>File</span>
+                                <input type="file" name="image" id="image" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path" type="text" placeholder="Upload one or more files">
+                            </div>
+                        </div>
+
+                        <br />
+                        <button type="submit" form="signup_form" class="btn btn-info">Update</button>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col s12" style="text-align: center; padding: 0px 0px;">
+
+                    <%if(myPosts.length > 0){%>
+
+                        <table class="striped">
+                            <%for(let post of myPosts){%>
+                                <tr>
+                                    <td><img src="<%=post.imageSource%>" style="width: 80px;" /></td>
+                                    <td><%= post.title%><p style="font-size: 10px;font-style: italic;"><%= moment(post.createdAt).format('DD/MM/YYYY hh:mm')%></p></td>
+                                    <td>
+                                        <a href="/profile/editpost/<%=post._id%>" class="btn cyan"><i class="material-icons right">edit</i></a>
+                                        <a href="/profile/remove_post/<%=post._id%>" onclick="return confirm('Are you sure you want to delete this item?');" class="btn red"><i class="material-icons right">delete</i></a>
+                                    </td>
+                                </tr>
+                            <%}%>
+                        </table>
+
+                    <%}else{%>
+                        <p>You don't have any post</p>
+                    <%}%>
+
+                </div>
+            </div>
+        </div>
+    </div>
+        <%- include('./includes/footer.ejs') %>
+</body>
+
+</html>
