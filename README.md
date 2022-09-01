@@ -31,7 +31,7 @@ nodemon
   <br /><br />
 </p>
 
-# other profile ejs page:<br/>
+# other profiles ejs page:<br/>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/60574244/178138946-afa2a6dc-7f26-4f08-a88f-5569706e4504.png" width="80%">
   <br /><br />
